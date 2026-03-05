@@ -2,350 +2,114 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>飜訳 · 일본어 번역기</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>🍜 일본어 번역기</title>
 <style>
-:root {
-  --ink:     #1a1208;
-  --paper:   #faf7f0;
-  --warm:    #f5efe0;
-  --red:     #c0392b;
-  --red2:    #e74c3c;
-  --gold:    #b8860b;
-  --gold2:   #d4a017;
-  --muted:   #8a7d6b;
-  --border:  #ddd5c0;
-  --card:    #ffffff;
-  --shadow:  rgba(100,80,40,0.12);
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Noto Sans KR', sans-serif; background: #1a1a2e; min-height: 100vh; color: #fff; padding-bottom: 40px; }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+header { background: linear-gradient(135deg, #e8472e, #c0392b); padding: 14px 20px; text-align: center; box-shadow: 0 3px 15px rgba(0,0,0,0.4); position: sticky; top: 0; z-index: 200; }
+header h1 { font-size: 1.2rem; font-weight: 700; }
+header p { font-size: 0.75rem; opacity: 0.85; margin-top: 2px; }
 
-body {
-  font-family: 'Noto Sans KR', sans-serif;
-  background: var(--paper);
-  background-image:
-    radial-gradient(ellipse at 20% 0%, rgba(184,134,11,0.07) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 100%, rgba(192,57,43,0.06) 0%, transparent 60%);
-  min-height: 100vh;
-  color: var(--ink);
-  padding-bottom: 60px;
-}
-
-/* ── HEADER ── */
-header {
-  background: var(--ink);
-  padding: 18px 24px 14px;
-  text-align: center;
-  position: -webkit-sticky; position: sticky;
-  top: 0; z-index: 200;
-  border-bottom: 3px solid var(--gold);
-}
-header .logo {
-  font-family: 'Noto Serif KR', serif;
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--paper);
-  letter-spacing: 0.08em;
-}
-header .logo span { color: var(--gold2); }
-header p {
-  font-size: 0.7rem;
-  color: var(--muted);
-  margin-top: 3px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-/* ── TABS ── */
-.tabs {
-  display: -webkit-flex; display: flex;
-  background: var(--ink);
-  border-bottom: 1px solid var(--gold);
-  position: -webkit-sticky; position: sticky;
-  top: 62px; z-index: 100;
-}
-.tab-btn {
-  -webkit-flex: 1; flex: 1;
-  padding: 11px 4px;
-  background: transparent; border: none;
-  color: var(--muted);
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 0.78rem; font-weight: 600;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  letter-spacing: 0.04em;
-  -webkit-appearance: none;
-  transition: color 0.2s;
-}
-.tab-btn.active {
-  color: var(--gold2);
-  border-bottom-color: var(--gold2);
-}
-
+.tabs { display: flex; background: #16213e; border-bottom: 2px solid #0f3460; position: sticky; top: 52px; z-index: 100; }
+.tab-btn { flex: 1; padding: 12px 4px; background: transparent; border: none; color: #888; font-size: 0.82rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+.tab-btn.active { color: #e74c3c; border-bottom-color: #e74c3c; background: #1a2a4a; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-.section { padding: 20px 16px; max-width: 680px; margin: 0 auto; }
+.section { padding: 16px; max-width: 750px; margin: 0 auto; }
 
-/* ── API KEY BOX ── */
-.apikey-box {
-  background: var(--card);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 18px;
-  border: 1px solid var(--border);
-  box-shadow: 0 2px 12px var(--shadow);
-}
-.apikey-box h3 {
-  font-family: 'Noto Serif KR', serif;
-  font-size: 0.85rem;
-  color: var(--gold);
-  margin-bottom: 12px;
-  display: flex; align-items: center; gap: 6px;
-}
-.apikey-row { display: -webkit-flex; display: flex; gap: 8px; -webkit-align-items: center; align-items: center; }
-.apikey-input {
-  -webkit-flex: 1; flex: 1;
-  padding: 10px 14px;
-  background: var(--warm);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  color: var(--ink);
-  font-size: 16px;
-  font-family: 'Courier New', monospace;
-  outline: none;
-  -webkit-appearance: none;
-  transition: border-color 0.2s;
-}
-.apikey-input:focus { border-color: var(--gold); }
-.apikey-input::placeholder { color: #bbb; font-size: 0.82rem; }
-.icon-btn {
-  background: var(--warm); border: 1.5px solid var(--border);
-  color: var(--muted); padding: 10px 13px;
-  border-radius: 10px; cursor: pointer;
-  font-size: 1rem; min-width: 44px; -webkit-appearance: none;
-}
-.save-btn {
-  background: var(--ink); color: var(--gold2);
-  border: none; padding: 10px 18px;
-  border-radius: 10px; cursor: pointer;
-  font-size: 0.85rem; font-weight: 700;
-  white-space: nowrap; -webkit-appearance: none;
-  letter-spacing: 0.04em;
-  transition: opacity 0.2s;
-}
-.save-btn:hover { opacity: 0.85; }
-.apikey-status { font-size: 0.75rem; margin-top: 8px; min-height: 16px; }
-.apikey-hint { font-size: 0.7rem; color: var(--muted); margin-top: 6px; line-height: 1.6; }
-.apikey-hint a { color: var(--gold); text-decoration: none; }
+/* API KEY */
+.apikey-box { background: #16213e; border-radius: 14px; padding: 14px; margin-bottom: 16px; border: 1px solid #0f3460; }
+.apikey-box h3 { font-size: 0.88rem; color: #f39c12; margin-bottom: 10px; }
+.apikey-row { display: flex; gap: 8px; align-items: center; }
+.apikey-input { flex: 1; padding: 10px 12px; background: #0f1e3a; border: 1px solid #0f3460; border-radius: 10px; color: #fff; font-size: 0.8rem; outline: none; font-family: monospace; }
+.apikey-input:focus { border-color: #e74c3c; }
+.apikey-input::placeholder { color: #444; }
+.icon-btn { background: #0f3460; border: none; color: #aaa; padding: 10px 13px; border-radius: 10px; cursor: pointer; font-size: 1rem; }
+.save-btn { background: #e74c3c; border: none; color: white; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+.save-btn:hover { opacity: 0.88; }
+.apikey-status { font-size: 0.76rem; margin-top: 7px; min-height: 16px; }
+.apikey-hint { font-size: 0.72rem; color: #555; margin-top: 5px; line-height: 1.5; }
+.apikey-hint a { color: #3498db; text-decoration: none; }
 
-/* ── UPLOAD ── */
-.upload-area {
-  border: 2px dashed var(--border);
-  border-radius: 16px;
-  padding: 36px 20px;
-  text-align: center;
-  cursor: pointer;
-  background: var(--card);
-  margin-bottom: 16px;
-  transition: border-color 0.2s, background 0.2s;
-  box-shadow: 0 2px 12px var(--shadow);
-}
-.upload-area:hover { border-color: var(--gold); background: var(--warm); }
-.upload-icon { font-size: 2.8rem; margin-bottom: 10px; }
-.upload-area p { font-size: 0.85rem; color: var(--muted); line-height: 1.8; }
-.upload-area strong { color: var(--red); font-weight: 600; }
+/* UPLOAD */
+.upload-area { border: 2px dashed #e74c3c; border-radius: 14px; padding: 32px 20px; text-align: center; cursor: pointer; background: #16213e; transition: background 0.2s; margin-bottom: 14px; }
+.upload-area:hover { background: #1e2d50; }
+.upload-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.upload-area p { font-size: 0.85rem; color: #aaa; line-height: 1.7; }
+.upload-area strong { color: #e74c3c; }
+#fileInput { display: none; }
 
-#fileInput { position: absolute; left: -9999px; opacity: 0; width: 1px; height: 1px; }
+/* PREVIEW */
+.preview-wrap { display: none; margin-bottom: 14px; position: relative; }
+.preview-wrap img { width: 100%; border-radius: 12px; display: block; box-shadow: 0 4px 18px rgba(0,0,0,0.4); }
+.change-btn { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.65); border: none; color: #fff; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.76rem; }
 
-.preview-wrap { display: none; margin-bottom: 16px; position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px var(--shadow); }
-.preview-wrap img { width: 100%; display: block; }
-.change-btn {
-  position: absolute; top: 10px; right: 10px;
-  background: rgba(26,18,8,0.7); border: none;
-  color: var(--paper); padding: 7px 14px;
-  border-radius: 8px; cursor: pointer;
-  font-size: 0.78rem; -webkit-appearance: none;
-  backdrop-filter: blur(4px);
-}
+.translate-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; display: none; margin-bottom: 14px; }
+.translate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.status-box { border-radius: 10px; padding: 11px 14px; font-size: 0.84rem; margin-bottom: 12px; display: none; background: #16213e; }
 
-.translate-btn {
-  width: 100%; padding: 16px;
-  background: var(--ink);
-  color: var(--gold2);
-  border: 2px solid var(--gold);
-  border-radius: 14px;
-  font-family: 'Noto Serif KR', serif;
-  font-size: 1rem; font-weight: 700;
-  cursor: pointer; display: none;
-  margin-bottom: 14px;
-  letter-spacing: 0.1em;
-  -webkit-appearance: none;
-  transition: background 0.2s, color 0.2s;
-}
-.translate-btn:hover { background: var(--gold); color: var(--ink); }
-.translate-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+/* RESULT TABS */
+.result-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+.result-tab-btn { flex: 1; padding: 10px; background: #16213e; border: 2px solid #0f3460; border-radius: 10px; color: #888; font-size: 0.84rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.result-tab-btn.active { border-color: #e74c3c; color: #e74c3c; background: #1a2a4a; }
 
-.status-box {
-  border-radius: 12px; padding: 12px 16px;
-  font-size: 0.84rem; margin-bottom: 14px;
-  display: none;
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--muted);
-}
-
-/* ── RESULT INNER TABS ── */
-.result-tabs { display: -webkit-flex; display: flex; gap: 8px; margin-bottom: 18px; }
-.r-tab-btn {
-  -webkit-flex: 1; flex: 1; padding: 11px;
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  color: var(--muted);
-  font-size: 0.82rem; font-weight: 600;
-  cursor: pointer; -webkit-appearance: none;
-  transition: all 0.2s;
-  font-family: 'Noto Sans KR', sans-serif;
-}
-.r-tab-btn.active {
-  border-color: var(--gold);
-  color: var(--gold);
-  background: var(--warm);
-}
-
-/* ── OVERLAY ── */
+/* OVERLAY */
 .overlay-section { display: none; }
-.canvas-wrap {
-  border-radius: 14px; overflow: hidden;
-  box-shadow: 0 4px 24px var(--shadow);
-  margin-bottom: 10px;
-  border: 1px solid var(--border);
-}
-#overlayCanvas { width: 100%; height: auto; display: block; }
-.overlay-hint {
-  font-size: 0.72rem; color: var(--muted);
-  text-align: center; margin-bottom: 16px;
-  letter-spacing: 0.04em;
-}
+.overlay-container { position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5); margin-bottom: 14px; background: #000; }
+.overlay-container img { width: 100%; display: block; }
+.overlay-container canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.overlay-hint { font-size: 0.76rem; color: #666; text-align: center; margin-bottom: 14px; }
 
-/* ── MENU CARDS ── */
-.text-section { display: none; }
+/* MENU CARD SECTION */
+.menu-section { display: none; }
+.summary-box { background: #0f3460; border-radius: 10px; padding: 10px 14px; font-size: 0.8rem; color: #aaa; margin-bottom: 16px; border-left: 3px solid #3498db; }
+.summary-box span { color: #f0f0f0; }
+.menu-result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.menu-result-header h3 { font-size: 0.9rem; color: #e74c3c; }
+.dl-btn { background: #27ae60; border: none; color: white; padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 0.76rem; font-weight: 700; }
 
-.summary-box {
-  background: var(--ink);
-  border-radius: 12px;
-  padding: 12px 16px;
-  font-size: 0.8rem;
-  color: var(--muted);
-  margin-bottom: 18px;
-  border-left: 3px solid var(--gold);
-}
-.summary-box span { color: var(--gold2); font-family: 'Noto Serif KR', serif; }
+/* CATEGORY */
+.category-block { margin-bottom: 20px; }
+.category-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #0f3460; }
+.category-icon { font-size: 1.2rem; }
+.category-name { font-size: 0.95rem; font-weight: 700; color: #f39c12; }
+.category-count { font-size: 0.72rem; color: #555; background: #0f3460; padding: 2px 8px; border-radius: 20px; }
 
-.result-header {
-  display: -webkit-flex; display: flex;
-  justify-content: space-between;
-  -webkit-align-items: center; align-items: center;
-  margin-bottom: 14px;
-}
-.result-header h3 {
-  font-family: 'Noto Serif KR', serif;
-  font-size: 1rem; color: var(--ink);
-  letter-spacing: 0.06em;
-}
-.dl-btn {
-  background: var(--ink); color: var(--gold2);
-  border: none; padding: 8px 16px;
-  border-radius: 8px; cursor: pointer;
-  font-size: 0.76rem; font-weight: 700;
-  -webkit-appearance: none; letter-spacing: 0.04em;
-}
+/* MENU CARD */
+.menu-cards { display: flex; flex-direction: column; gap: 10px; }
+.menu-card { background: #16213e; border-radius: 12px; padding: 13px 14px; border: 1px solid #0f3460; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; transition: border-color 0.2s; }
+.menu-card:hover { border-color: #1a5276; }
+.menu-card-left { flex: 1; min-width: 0; }
+.menu-name-ko { font-size: 0.95rem; font-weight: 700; color: #7effc0; margin-bottom: 4px; }
+.menu-name-jp { font-size: 0.78rem; color: #f5d08a; margin-bottom: 2px; }
+.menu-pronunciation { font-size: 0.72rem; color: #f39c12; }
+.menu-note { font-size: 0.74rem; color: #888; margin-top: 5px; font-style: italic; }
+.menu-card-right { text-align: right; flex-shrink: 0; }
+.menu-price { font-size: 1rem; font-weight: 700; color: #e74c3c; white-space: nowrap; }
+.menu-price-note { font-size: 0.7rem; color: #555; margin-top: 2px; }
 
-.menu-card {
-  background: var(--card);
-  border-radius: 16px;
-  margin-bottom: 16px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  box-shadow: 0 2px 14px var(--shadow);
-}
-.menu-card-header {
-  background: var(--ink);
-  padding: 12px 18px;
-  font-family: 'Noto Serif KR', serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--gold2);
-  letter-spacing: 0.08em;
-  border-bottom: 2px solid var(--gold);
-}
-.menu-row {
-  display: -webkit-flex; display: flex;
-  justify-content: space-between;
-  -webkit-align-items: flex-start; align-items: flex-start;
-  padding: 13px 18px;
-  border-bottom: 1px solid var(--warm);
-  gap: 12px;
-  transition: background 0.15s;
-}
-.menu-row:last-child { border-bottom: none; }
-.menu-row:hover { background: var(--warm); }
-.item-info { -webkit-flex: 1; flex: 1; min-width: 0; }
-.item-name {
-  font-size: 0.92rem; font-weight: 600;
-  color: var(--ink);
-  font-family: 'Noto Sans KR', sans-serif;
-}
-.item-sub {
-  font-size: 0.72rem; color: var(--muted);
-  margin-top: 3px;
-  font-family: 'Noto Sans KR', sans-serif;
-}
-.item-right { text-align: right; white-space: nowrap; }
-.item-price {
-  font-size: 0.92rem; font-weight: 700;
-  color: var(--red);
-  font-family: 'Noto Serif KR', serif;
-}
-.item-note { font-size: 0.68rem; color: var(--gold); margin-top: 2px; }
+/* NON-MENU CARD */
+.info-card { background: #12192e; border-radius: 12px; padding: 11px 14px; border: 1px solid #0a1f3a; }
+.info-text-ko { font-size: 0.88rem; color: #bbb; margin-bottom: 3px; }
+.info-text-jp { font-size: 0.76rem; color: #555; }
+.info-pronunciation { font-size: 0.7rem; color: #7a6a2a; margin-top: 2px; }
 
-/* ── SPINNER ── */
-.spinner {
-  display: inline-block; width: 15px; height: 15px;
-  border: 2px solid rgba(212,160,23,0.3);
-  border-top-color: var(--gold2);
-  border-radius: 50%;
-  -webkit-animation: spin 0.8s linear infinite;
-  animation: spin 0.8s linear infinite;
-  vertical-align: middle; margin-right: 6px;
-}
-@-webkit-keyframes spin { to { -webkit-transform: rotate(360deg); } }
+.spinner { display: inline-block; width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 6px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── DIVIDER ── */
-.divider {
-  text-align: center;
-  color: var(--border);
-  font-size: 1.2rem;
-  margin: 6px 0 2px;
-  letter-spacing: 0.3em;
-}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">🍜 <span>飜訳</span> · 일본어 번역기</div>
-  <p>Japanese Menu Translator · Travel Edition</p>
+  <h1>🍜 일본어 번역기</h1>
+  <p>사진 찍고 바로 번역 · 여행용</p>
 </header>
 
 <div class="tabs">
-  <button class="tab-btn active" id="uploadTabBtn" onclick="switchTab('upload',this)">📸 번역하기</button>
-  <button class="tab-btn" id="resultTabBtn" style="display:none;" onclick="switchTab('result',this)">✅ 결과보기</button>
+  <button class="tab-btn active" onclick="switchTab('upload', this)">📸 번역하기</button>
+  <button class="tab-btn" onclick="switchTab('result', this)" id="resultTabBtn" style="display:none;">✅ 결과보기</button>
 </div>
 
 <!-- TAB: 번역하기 -->
@@ -355,36 +119,30 @@ header p {
     <div class="apikey-box">
       <h3>🔑 Claude API 키</h3>
       <div class="apikey-row">
-        <input type="password" id="apikeyInput" class="apikey-input"
-          placeholder="sk-ant-api03-..."
-          spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">
+        <input type="password" id="apikeyInput" class="apikey-input" placeholder="sk-ant-api03-..." spellcheck="false" autocomplete="off">
         <button class="icon-btn" onclick="toggleKeyVis()">👁</button>
         <button class="save-btn" onclick="saveApiKey()">저장</button>
+        <button class="icon-btn" onclick="deleteApiKey()" title="키 삭제">🗑</button>
       </div>
       <div class="apikey-status" id="apikeyStatus"></div>
       <div class="apikey-hint">
-        이 기기 브라우저에 저장 · 다음 방문 시 자동 불러옴<br>
-        발급 <a href="https://console.anthropic.com/keys" target="_blank">console.anthropic.com/keys</a>
-        &nbsp;·&nbsp; <a href="#" onclick="deleteApiKey();return false;" style="color:#c0392b;">키 삭제</a>
+        키는 이 기기 로컬에 저장됩니다 (브라우저 localStorage)<br>
+        발급: <a href="https://console.anthropic.com/keys" target="_blank">console.anthropic.com/keys</a>
       </div>
     </div>
 
-    <label for="fileInput">
-      <div class="upload-area" id="uploadArea">
-        <div class="upload-icon">📷</div>
-        <p><strong>사진 업로드</strong><br>메뉴판 · 간판 · 안내문<br>일본어가 포함된 이미지</p>
-      </div>
-    </label>
-    <input type="file" id="fileInput" accept="image/*" capture="environment" onchange="handleFile(event)">
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📸</div>
+      <p><strong>사진 업로드</strong><br>메뉴판 · 간판 · 안내문<br>일본어가 포함된 이미지</p>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" onchange="handleFile(event)">
 
     <div class="preview-wrap" id="previewWrap">
       <img id="previewImg" alt="미리보기">
       <button class="change-btn" onclick="document.getElementById('fileInput').click()">🔄 변경</button>
     </div>
 
-    <button class="translate-btn" id="translateBtn" onclick="doTranslate()">
-      번역하기  ·  翻訳する
-    </button>
+    <button class="translate-btn" id="translateBtn" onclick="doTranslate()">🔍 번역하기</button>
     <div class="status-box" id="statusBox"></div>
 
   </div>
@@ -395,66 +153,46 @@ header p {
   <div class="section">
 
     <div class="result-tabs">
-      <button class="r-tab-btn active" id="rTabOverlay" onclick="switchResult('overlay',this)">🖼 이미지 오버레이</button>
-      <button class="r-tab-btn" id="rTabText" onclick="switchResult('text',this)">📋 텍스트 정리</button>
+      <button class="result-tab-btn active" onclick="switchResult('overlay', this)">🖼 이미지 오버레이</button>
+      <button class="result-tab-btn" onclick="switchResult('menu', this)">🍽 메뉴 카드</button>
     </div>
 
     <!-- 오버레이 -->
     <div class="overlay-section" id="overlaySection">
-      <div class="canvas-wrap">
+      <div class="overlay-container">
+        <img id="overlayImg" alt="원본 이미지">
         <canvas id="overlayCanvas"></canvas>
       </div>
-      <p class="overlay-hint">· 한국어 번역이 원본 위치에 표시됩니다 ·</p>
+      <p class="overlay-hint">한국어 번역이 원본 위에 표시됩니다</p>
     </div>
 
-    <!-- 메뉴카드 -->
-    <div class="text-section" id="textSection">
+    <!-- 메뉴 카드 -->
+    <div class="menu-section" id="menuSection">
       <div class="summary-box" id="summaryBox"></div>
-      <div class="result-header">
-        <h3>번역 정리</h3>
+      <div class="menu-result-header">
+        <h3>🍽 메뉴 카드</h3>
         <button class="dl-btn" onclick="downloadResult()">💾 저장</button>
       </div>
-      <div id="menuCardArea"></div>
+      <div id="menuCards"></div>
     </div>
 
   </div>
 </div>
 
 <script>
-var savedApiKey   = '';
-var selectedFile  = null;
-var lastParsed    = null;
+var savedApiKey = localStorage.getItem('claude_apikey') || '';
+var selectedFile = null;
+var lastParsed = null;
 var uploadedDataUrl = null;
 
-/* localStorage 자동 불러오기 */
-try {
-  var _stored = localStorage.getItem('japan_translator_key');
-  if (_stored) {
-    savedApiKey = _stored;
-    window.addEventListener('DOMContentLoaded', function() {
-      var inp = document.getElementById('apikeyInput');
-      var st  = document.getElementById('apikeyStatus');
-      if (inp) inp.value = _stored;
-      if (st)  { st.style.color='#27ae60'; st.textContent='✅ 저장된 키 자동 불러옴 · 바로 사용 가능!'; }
-    });
+window.addEventListener('DOMContentLoaded', function() {
+  if (savedApiKey) {
+    document.getElementById('apikeyInput').value = savedApiKey;
+    var st = document.getElementById('apikeyStatus');
+    st.style.color = '#2ecc71';
+    st.textContent = '✅ 저장된 API 키를 불러왔습니다.';
   }
-} catch(e) {}
-
-/* ── localStorage에서 API 키 불러오기 ── */
-(function() {
-  try {
-    var stored = localStorage.getItem('anthropic_api_key');
-    if (stored) {
-      savedApiKey = stored;
-      document.addEventListener('DOMContentLoaded', function() {
-        var inp = document.getElementById('apikeyInput');
-        var st  = document.getElementById('apikeyStatus');
-        if (inp) inp.value = stored;
-        if (st)  { st.style.color = '#27ae60'; st.textContent = '✅ 저장된 키 불러옴 · 바로 사용 가능합니다.'; }
-      });
-    }
-  } catch(e) {}
-})();
+});
 
 function switchTab(name, btn) {
   document.querySelectorAll('.tab-content').forEach(function(el){ el.classList.remove('active'); });
@@ -464,15 +202,10 @@ function switchTab(name, btn) {
 }
 
 function switchResult(name, btn) {
-  document.querySelectorAll('.r-tab-btn').forEach(function(el){ el.classList.remove('active'); });
+  document.querySelectorAll('.result-tab-btn').forEach(function(el){ el.classList.remove('active'); });
   btn.classList.add('active');
-  if (name === 'overlay') {
-    document.getElementById('overlaySection').style.display = 'block';
-    document.getElementById('textSection').style.display = 'none';
-  } else {
-    document.getElementById('overlaySection').style.display = 'none';
-    document.getElementById('textSection').style.display = 'block';
-  }
+  document.getElementById('overlaySection').style.display = name === 'overlay' ? 'block' : 'none';
+  document.getElementById('menuSection').style.display = name === 'menu' ? 'block' : 'none';
 }
 
 function toggleKeyVis() {
@@ -482,24 +215,24 @@ function toggleKeyVis() {
 
 function saveApiKey() {
   var val = document.getElementById('apikeyInput').value.trim();
-  var st  = document.getElementById('apikeyStatus');
-  if (!val) { st.style.color='#c0392b'; st.textContent='❌ API 키를 입력해주세요.'; return; }
-  if (!val.startsWith('sk-ant-')) { st.style.color='#b8860b'; st.textContent='⚠️ sk-ant- 로 시작해야 합니다.'; return; }
+  var st = document.getElementById('apikeyStatus');
+  if (!val) { st.style.color='#e74c3c'; st.textContent='❌ API 키를 입력해주세요.'; return; }
+  if (!val.startsWith('sk-ant-')) { st.style.color='#f39c12'; st.textContent='⚠️ sk-ant- 로 시작해야 합니다.'; return; }
   savedApiKey = val;
-  try { localStorage.setItem('japan_translator_key', val); } catch(e) {}
-  st.style.color='#27ae60'; st.textContent='✅ 저장 완료 · 다음 방문 시 자동으로 불러옵니다.';
+  try { localStorage.setItem('claude_apikey', val); } catch(e) {}
+  st.style.color='#2ecc71'; st.textContent='✅ 저장 완료! 다음에도 자동으로 불러옵니다.';
 }
 
 function deleteApiKey() {
-  try { localStorage.removeItem('japan_translator_key'); } catch(e) {}
   savedApiKey = '';
+  try { localStorage.removeItem('claude_apikey'); } catch(e) {}
   document.getElementById('apikeyInput').value = '';
   var st = document.getElementById('apikeyStatus');
-  st.style.color='#c0392b'; st.textContent='🗑 키가 삭제되었습니다.';
+  st.style.color='#aaa'; st.textContent='🗑 키가 삭제되었습니다.';
 }
 
 function handleFile(e) {
-  var file = e.target.files && e.target.files[0];
+  var file = e.target.files[0];
   if (!file) return;
   selectedFile = file;
   var reader = new FileReader();
@@ -507,7 +240,7 @@ function handleFile(e) {
     uploadedDataUrl = ev.target.result;
     document.getElementById('previewImg').src = uploadedDataUrl;
     document.getElementById('previewWrap').style.display = 'block';
-    document.getElementById('uploadArea').parentElement.style.display = 'none';
+    document.getElementById('uploadArea').style.display = 'none';
     document.getElementById('translateBtn').style.display = 'block';
     document.getElementById('statusBox').style.display = 'none';
   };
@@ -516,212 +249,187 @@ function handleFile(e) {
 
 function doTranslate() {
   if (!savedApiKey) { alert('먼저 API 키를 입력하고 저장해주세요.'); return; }
-  if (!selectedFile) { alert('사진을 먼저 업로드해주세요.'); return; }
+  if (!selectedFile) return;
 
-  var btn    = document.getElementById('translateBtn');
+  var btn = document.getElementById('translateBtn');
   var status = document.getElementById('statusBox');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>번역 중 · 잠시만요...';
+  btn.innerHTML = '<span class="spinner"></span>번역 중...';
   status.style.display = 'block';
-  status.style.color   = '#8a7d6b';
-  status.textContent   = '⚡ 번역 + 위치 분석 병렬 진행 중...';
+  status.style.color = '#aaa';
+  status.textContent = '🤖 AI가 이미지를 분석하고 있습니다...';
 
-  var b64       = uploadedDataUrl.split(',')[1];
+  var b64 = uploadedDataUrl.split(',')[1];
   var mediaType = selectedFile.type || 'image/jpeg';
 
-  // 번역 프롬프트
-  var promptTranslate =
-    '이 이미지의 일본어를 빠짐없이 모두 찾아 한국어로 번역하세요. ' +
-    '작은 글씨, 주석, 안내문, 헤더, 푸터 포함 모든 일본어를 빠뜨리지 마세요.\n\n' +
-    '반드시 아래 JSON만 출력 (설명 없이):\n' +
-    '{"summary":"한줄설명","categories":[{"title":"카테고리","icon":"이모지","items":[{"japanese":"원본","pronunciation":"한국어발음","korean":"번역","price":"가격또는null","note":"비고또는null"}]}]}';
+  var prompt = '이 이미지의 일본어 텍스트를 모두 찾아 분석하세요.\n' +
+    '메뉴판이라면 카테고리별로 분류하고, 메뉴가 아닌 텍스트도 별도 카테고리로 묶어주세요.\n' +
+    '각 텍스트의 이미지 내 위치도 퍼센트(%)로 추정해주세요.\n\n' +
+    '반드시 아래 JSON만 출력하세요 (설명 없이):\n' +
+    '{"summary":"이미지 전체 한줄 설명","categories":[{"name":"카테고리명","icon":"이모지","items":[' +
+    '{"japanese":"원본 일본어","pronunciation":"한국어 발음(예:라멘)","korean":"한국어 번역",' +
+    '"price":"가격(없으면 빈문자열)","note":"비고나 설명(없으면 빈문자열)","is_menu":true,' +
+    '"x":10,"y":20,"w":40,"h":5}]}]}\n\n' +
+    'is_menu: 메뉴 항목이면 true, 안내문/제목/기타 텍스트면 false\n' +
+    'x,y는 텍스트 좌측상단 위치(%), w,h는 텍스트 영역 크기(%)';
 
-  // 좌표 프롬프트
-  var promptCoords =
-    '이 이미지의 일본어 텍스트 위치를 % 좌표로 알려주세요.\n\n' +
-    '반드시 아래 JSON만 출력:\n' +
-    '{"items":[{"japanese":"원본일본어","x":10,"y":5,"w":40,"h":5}]}\n\n' +
-    'x,y=좌측상단(%), w,h=크기(%)';
-
-  function callAPI(prompt, maxTok) {
-    return fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': savedApiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: maxTok,
-        messages: [{ role: 'user', content: [
-          { type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } },
-          { type: 'text', text: prompt }
-        ]}]
-      })
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': savedApiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 3000,
+      messages: [{ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } },
+        { type: 'text', text: prompt }
+      ]}]
     })
-    .then(function(res) {
-      if (!res.ok) return res.json().then(function(e){ throw new Error((e.error && e.error.message) || '오류 ' + res.status); });
-      return res.json();
-    })
-    .then(function(data) {
-      var text = data.content.map(function(i){ return i.text || ''; }).join('');
-      return JSON.parse(text.replace(/```json|```/g, '').trim());
-    });
-  }
-
-  // 병렬 실행
-  Promise.all([
-    callAPI(promptTranslate, 3000),
-    callAPI(promptCoords, 1500)
-  ])
-  .then(function(results) {
-    var translated = results[0];
-    var coords     = results[1];
-
-    // 좌표를 일본어 텍스트 기준으로 매칭
-    var coordMap = {};
-    (coords.items || []).forEach(function(c) { coordMap[c.japanese] = c; });
-    (translated.categories || []).forEach(function(cat) {
-      (cat.items || []).forEach(function(item) {
-        var c = coordMap[item.japanese];
-        if (c) { item.x = c.x; item.y = c.y; item.w = c.w; item.h = c.h; }
-      });
-    });
-
-    lastParsed = translated;
-    document.getElementById('summaryBox').innerHTML = '📍 &nbsp;<span>' + esc(lastParsed.summary || '') + '</span>';
-    renderMenuCards();
-
+  })
+  .then(function(res) {
+    if (!res.ok) return res.json().then(function(e){ throw new Error(e.error && e.error.message || '오류 ' + res.status); });
+    return res.json();
+  })
+  .then(function(data) {
+    var text = data.content.map(function(i){ return i.text||''; }).join('');
+    lastParsed = JSON.parse(text.replace(/```json|```/g,'').trim());
+    renderResults();
     status.style.display = 'none';
-    var resultBtn = document.getElementById('resultTabBtn');
-    resultBtn.style.display = 'block';
-    switchTab('result', resultBtn);
-    switchResult('overlay', document.getElementById('rTabOverlay'));
-    setTimeout(drawOverlay, 120);
+    document.getElementById('resultTabBtn').style.display = 'block';
+    switchTab('result', document.getElementById('resultTabBtn'));
+    switchResult('overlay', document.querySelector('.result-tab-btn'));
   })
   .catch(function(err) {
-    status.style.color  = '#c0392b';
-    status.textContent  = '❌ ' + err.message;
+    status.style.color = '#e74c3c';
+    status.textContent = '❌ ' + err.message;
   })
   .finally(function() {
-    btn.disabled  = false;
-    btn.innerHTML = '번역하기  ·  翻訳する';
+    btn.disabled = false;
+    btn.innerHTML = '🔍 다시 번역하기';
   });
 }
 
-function renderMenuCards() {
-  var area = document.getElementById('menuCardArea');
-  if (!lastParsed || !lastParsed.categories) { area.innerHTML = ''; return; }
-  var html = '';
-  lastParsed.categories.forEach(function(cat) {
-    html += '<div class="menu-card">';
-    html += '<div class="menu-card-header">' + esc(cat.icon || '📌') + '  ' + esc(cat.title || '기타') + '</div>';
+function renderResults() {
+  if (!lastParsed) return;
+
+  // 요약
+  document.getElementById('summaryBox').innerHTML = '📍 <span>' + escHtml(lastParsed.summary || '') + '</span>';
+
+  // 메뉴 카드 렌더링
+  var container = document.getElementById('menuCards');
+  container.innerHTML = '';
+  var cats = lastParsed.categories || [];
+  cats.forEach(function(cat) {
+    var block = document.createElement('div');
+    block.className = 'category-block';
+
+    var header = '<div class="category-header">' +
+      '<span class="category-icon">' + escHtml(cat.icon || '📌') + '</span>' +
+      '<span class="category-name">' + escHtml(cat.name || '') + '</span>' +
+      '<span class="category-count">' + (cat.items || []).length + '개</span>' +
+      '</div>';
+
+    var cards = '<div class="menu-cards">';
     (cat.items || []).forEach(function(item) {
-      var hasPrice = item.price && item.price !== 'null';
-      var hasNote  = item.note  && item.note  !== 'null';
-      html += '<div class="menu-row"><div class="item-info">';
-      html += '<div class="item-name">' + esc(item.korean || '') + '</div>';
-      html += '<div class="item-sub">';
-      html += esc(item.japanese || '');
-      if (item.pronunciation && item.pronunciation !== 'null') {
-        html += ' &nbsp;<span style="color:var(--gold);font-size:0.7rem;">(' + esc(item.pronunciation) + ')</span>';
+      if (item.is_menu) {
+        cards += '<div class="menu-card">' +
+          '<div class="menu-card-left">' +
+            '<div class="menu-name-ko">' + escHtml(item.korean || '') + '</div>' +
+            '<div class="menu-name-jp">' + escHtml(item.japanese || '') +
+              (item.pronunciation ? ' <span class="menu-pronunciation">(' + escHtml(item.pronunciation) + ')</span>' : '') +
+            '</div>' +
+            (item.note ? '<div class="menu-note">' + escHtml(item.note) + '</div>' : '') +
+          '</div>' +
+          '<div class="menu-card-right">' +
+            (item.price ? '<div class="menu-price">' + escHtml(item.price) + '</div>' : '') +
+          '</div>' +
+        '</div>';
+      } else {
+        cards += '<div class="info-card">' +
+          '<div class="info-text-ko">' + escHtml(item.korean || '') + '</div>' +
+          '<div class="info-text-jp">' + escHtml(item.japanese || '') +
+            (item.pronunciation ? ' <span class="info-pronunciation">(' + escHtml(item.pronunciation) + ')</span>' : '') +
+          '</div>' +
+        '</div>';
       }
-      html += '</div>';
-      if (hasNote) html += '<div class="item-sub" style="color:var(--gold)">' + esc(item.note) + '</div>';
-      html += '</div>';
-      if (hasPrice) html += '<div class="item-right"><div class="item-price">' + esc(item.price) + '</div></div>';
-      html += '</div>';
     });
-    html += '</div>';
+    cards += '</div>';
+
+    block.innerHTML = header + cards;
+    container.appendChild(block);
   });
-  area.innerHTML = html;
-}
 
-function drawOverlay() {
-  if (!lastParsed || !uploadedDataUrl) return;
-  var canvas = document.getElementById('overlayCanvas');
-  var ctx    = canvas.getContext('2d');
-  var img    = new Image();
+  // 오버레이 캔버스
+  var allItems = [];
+  (lastParsed.categories || []).forEach(function(cat){ allItems = allItems.concat(cat.items || []); });
 
-  img.onload = function() {
-    var W = img.naturalWidth;
-    var H = img.naturalHeight;
-    canvas.width  = W;
-    canvas.height = H;
-    ctx.drawImage(img, 0, 0, W, H);
-
-    var allItems = [];
-    (lastParsed.categories || []).forEach(function(cat) {
-      (cat.items || []).forEach(function(item) { allItems.push(item); });
-    });
+  var overlayImg = document.getElementById('overlayImg');
+  overlayImg.src = uploadedDataUrl;
+  overlayImg.onload = function() {
+    var canvas = document.getElementById('overlayCanvas');
+    canvas.width = overlayImg.naturalWidth;
+    canvas.height = overlayImg.naturalHeight;
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var W = canvas.width, H = canvas.height;
 
     allItems.forEach(function(item) {
-      if (item.x == null || item.y == null) return;
-      var x  = (item.x / 100) * W;
-      var y  = (item.y / 100) * H;
-      var bw = Math.max((item.w / 100) * W, W * 0.08);
-      var bh = Math.max((item.h / 100) * H, H * 0.028);
-      var fs = Math.max(13, Math.min(Math.round(bh * 0.6), H * 0.044));
+      var px = (item.x / 100) * W;
+      var py = (item.y / 100) * H;
+      var pw = Math.max((item.w / 100) * W, W * 0.15);
+      var ph = Math.max((item.h / 100) * H, H * 0.045);
+      var fontSize = Math.max(14, Math.min(Math.round(ph * 0.55), H * 0.05));
 
-      /* 배경: 따뜻한 아이보리 */
-      ctx.fillStyle = 'rgba(250,247,240,0.92)';
-      ctx.fillRect(x, y, bw, bh);
-      /* 테두리: 골드 */
-      ctx.strokeStyle = 'rgba(184,134,11,0.9)';
-      ctx.lineWidth   = Math.max(1.5, W / 450);
-      ctx.strokeRect(x, y, bw, bh);
+      ctx.fillStyle = 'rgba(20, 20, 40, 0.82)';
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(px, py, pw, ph, 6);
+      else ctx.rect(px, py, pw, ph);
+      ctx.fill();
 
-      ctx.font          = 'bold ' + fs + 'px sans-serif';
-      ctx.textBaseline  = 'middle';
-      var pad = fs * 0.45;
+      ctx.strokeStyle = 'rgba(231, 76, 60, 0.8)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
 
-      /* 가격 (빨간색, 우측) */
-      if (item.price && item.price !== 'null') {
-        ctx.fillStyle = '#c0392b';
-        var priceW = ctx.measureText(item.price).width;
-        ctx.fillText(item.price, x + bw - priceW - pad, y + bh / 2);
-        /* 번역 텍스트 (진한 잉크, 좌측) */
-        ctx.fillStyle = '#1a1208';
-        var label  = item.korean || '';
-        var maxTw  = bw - priceW - pad * 3;
-        while (label.length > 1 && ctx.measureText(label).width > maxTw) label = label.slice(0,-1);
-        if (label !== item.korean) label += '…';
-        ctx.fillText(label, x + pad, y + bh / 2);
-      } else {
-        ctx.fillStyle = '#1a1208';
-        var label  = item.korean || '';
-        var maxTw  = bw - pad * 2;
-        while (label.length > 1 && ctx.measureText(label).width > maxTw) label = label.slice(0,-1);
-        if (label !== item.korean) label += '…';
-        ctx.fillText(label, x + pad, y + bh / 2);
+      ctx.fillStyle = '#7effc0';
+      ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
+      ctx.textBaseline = 'middle';
+      var maxW = pw - 8;
+      var koText = item.korean || '';
+      while (ctx.measureText(koText).width > maxW && koText.length > 2) {
+        koText = koText.slice(0, -1);
       }
+      if (koText !== (item.korean || '')) koText += '…';
+      ctx.fillText(koText, px + 4, py + ph / 2);
     });
   };
-  img.src = uploadedDataUrl;
+
+  document.getElementById('overlaySection').style.display = 'block';
+  document.getElementById('menuSection').style.display = 'none';
 }
 
-function esc(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function downloadResult() {
   if (!lastParsed) return;
-  var lines = [lastParsed.summary || '', ''];
+  var lines = [lastParsed.summary || ''];
   (lastParsed.categories || []).forEach(function(cat) {
-    lines.push('== ' + (cat.icon || '') + ' ' + (cat.title || '') + ' ==');
+    lines.push('\n[' + cat.name + ']');
     (cat.items || []).forEach(function(item) {
-      var line = (item.korean || '') + '  /  ' + (item.japanese || '');
-      if (item.price && item.price !== 'null') line += '  —  ' + item.price;
-      if (item.note  && item.note  !== 'null') line += '  (' + item.note + ')';
-      lines.push(line);
+      var parts = [item.japanese, '(' + (item.pronunciation||'') + ')', item.korean];
+      if (item.price) parts.push(item.price);
+      if (item.note) parts.push(item.note);
+      lines.push(parts.join('\t'));
     });
-    lines.push('');
   });
   var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
-  var a    = document.createElement('a');
-  a.href   = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
   a.download = '번역결과.txt';
   a.click();
 }
