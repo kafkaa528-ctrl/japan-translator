@@ -524,49 +524,73 @@ function doTranslate() {
   btn.innerHTML = '<span class="spinner"></span>번역 중 · 잠시만요...';
   status.style.display = 'block';
   status.style.color   = '#8a7d6b';
-  status.textContent   = '🤖 AI가 이미지를 분석하고 있습니다...';
+  status.textContent   = '⚡ 번역 + 위치 분석 병렬 진행 중...';
 
   var b64       = uploadedDataUrl.split(',')[1];
   var mediaType = selectedFile.type || 'image/jpeg';
 
-  var prompt =
-    '이 이미지에서 보이는 일본어 텍스트를 빠짐없이 모두 찾아 한국어로 번역하세요.\n' +
-    '작은 글씨, 주석, 안내문, 설명문, 헤더, 푸터 포함 이미지의 모든 일본어를 빠뜨리지 마세요.\n\n' +
-    '반드시 아래 JSON만 출력하세요 (설명 없이):\n' +
-    '{"summary":"이미지 한줄 설명","categories":[{"title":"카테고리명","icon":"이모지1개","items":[{"japanese":"원본 일본어","pronunciation":"일본어 발음을 한국어로 (예: 라멘, 미소시루)","korean":"자연스러운 한국어 번역","price":"가격(있으면) 또는 null","note":"시간제한·수량제한 등 비고(있으면) 또는 null","x":10,"y":5,"w":40,"h":5}]}]}\n\n' +
-    '규칙:\n' +
-    '1. 이미지에 보이는 일본어는 단 하나도 빠뜨리지 말 것\n' +
-    '2. 메뉴 항목뿐 아니라 설명문·안내문·주석도 모두 포함\n' +
-    '3. 비슷한 항목은 같은 카테고리로 묶을 것\n' +
-    '4. x,y,w,h 는 이미지 크기 대비 % 위치\n' +
-    '5. JSON 외 다른 텍스트 절대 출력 금지';
+  // 번역 프롬프트
+  var promptTranslate =
+    '이 이미지의 일본어를 빠짐없이 모두 찾아 한국어로 번역하세요. ' +
+    '작은 글씨, 주석, 안내문, 헤더, 푸터 포함 모든 일본어를 빠뜨리지 마세요.\n\n' +
+    '반드시 아래 JSON만 출력 (설명 없이):\n' +
+    '{"summary":"한줄설명","categories":[{"title":"카테고리","icon":"이모지","items":[{"japanese":"원본","pronunciation":"한국어발음","korean":"번역","price":"가격또는null","note":"비고또는null"}]}]}';
 
-  fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': savedApiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 3000,
-      messages: [{ role: 'user', content: [
-        { type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } },
-        { type: 'text', text: prompt }
-      ]}]
+  // 좌표 프롬프트
+  var promptCoords =
+    '이 이미지의 일본어 텍스트 위치를 % 좌표로 알려주세요.\n\n' +
+    '반드시 아래 JSON만 출력:\n' +
+    '{"items":[{"japanese":"원본일본어","x":10,"y":5,"w":40,"h":5}]}\n\n' +
+    'x,y=좌측상단(%), w,h=크기(%)';
+
+  function callAPI(prompt, maxTok) {
+    return fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': savedApiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: maxTok,
+        messages: [{ role: 'user', content: [
+          { type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } },
+          { type: 'text', text: prompt }
+        ]}]
+      })
     })
-  })
-  .then(function(res) {
-    if (!res.ok) return res.json().then(function(e){ throw new Error((e.error && e.error.message) || ('오류 ' + res.status)); });
-    return res.json();
-  })
-  .then(function(data) {
-    var text  = data.content.map(function(i){ return i.text || ''; }).join('');
-    var clean = text.replace(/```json|```/g, '').trim();
-    lastParsed = JSON.parse(clean);
+    .then(function(res) {
+      if (!res.ok) return res.json().then(function(e){ throw new Error((e.error && e.error.message) || '오류 ' + res.status); });
+      return res.json();
+    })
+    .then(function(data) {
+      var text = data.content.map(function(i){ return i.text || ''; }).join('');
+      return JSON.parse(text.replace(/```json|```/g, '').trim());
+    });
+  }
 
+  // 병렬 실행
+  Promise.all([
+    callAPI(promptTranslate, 3000),
+    callAPI(promptCoords, 1500)
+  ])
+  .then(function(results) {
+    var translated = results[0];
+    var coords     = results[1];
+
+    // 좌표를 일본어 텍스트 기준으로 매칭
+    var coordMap = {};
+    (coords.items || []).forEach(function(c) { coordMap[c.japanese] = c; });
+    (translated.categories || []).forEach(function(cat) {
+      (cat.items || []).forEach(function(item) {
+        var c = coordMap[item.japanese];
+        if (c) { item.x = c.x; item.y = c.y; item.w = c.w; item.h = c.h; }
+      });
+    });
+
+    lastParsed = translated;
     document.getElementById('summaryBox').innerHTML = '📍 &nbsp;<span>' + esc(lastParsed.summary || '') + '</span>';
     renderMenuCards();
 
