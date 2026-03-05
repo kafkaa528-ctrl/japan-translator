@@ -74,25 +74,25 @@ header p { font-size: 0.75rem; opacity: 0.85; margin-top: 2px; }
 .category-block { margin-bottom: 20px; }
 .category-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #0f3460; }
 .category-icon { font-size: 1.2rem; }
-.category-name { font-size: 0.95rem; font-weight: 700; color: #f39c12; }
+.category-name { font-size: 0.88rem; font-weight: 700; color: #f39c12; }
 .category-count { font-size: 0.72rem; color: #555; background: #0f3460; padding: 2px 8px; border-radius: 20px; }
 
 /* MENU CARD */
 .menu-cards { display: flex; flex-direction: column; gap: 10px; }
-.menu-card { background: #16213e; border-radius: 12px; padding: 13px 14px; border: 1px solid #0f3460; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; transition: border-color 0.2s; }
+.menu-card { background: #16213e; border-radius: 12px; padding: 10px 12px; border: 1px solid #0f3460; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; transition: border-color 0.2s; }
 .menu-card:hover { border-color: #1a5276; }
 .menu-card-left { flex: 1; min-width: 0; }
-.menu-name-ko { font-size: 0.95rem; font-weight: 700; color: #7effc0; margin-bottom: 4px; }
-.menu-name-jp { font-size: 0.78rem; color: #f5d08a; margin-bottom: 2px; }
+.menu-name-ko { font-size: 0.88rem; font-weight: 700; color: #7effc0; margin-bottom: 4px; }
+.menu-name-jp { font-size: 0.73rem; color: #f5d08a; margin-bottom: 2px; }
 .menu-pronunciation { font-size: 0.72rem; color: #f39c12; }
-.menu-note { font-size: 0.74rem; color: #888; margin-top: 5px; font-style: italic; }
+.menu-note { font-size: 0.7rem; color: #888; margin-top: 5px; font-style: italic; }
 .menu-card-right { text-align: right; flex-shrink: 0; }
-.menu-price { font-size: 1rem; font-weight: 700; color: #e74c3c; white-space: nowrap; }
+.menu-price { font-size: 0.9rem; font-weight: 700; color: #e74c3c; white-space: nowrap; }
 .menu-price-note { font-size: 0.7rem; color: #555; margin-top: 2px; }
 
 /* NON-MENU CARD */
 .info-card { background: #12192e; border-radius: 12px; padding: 11px 14px; border: 1px solid #0a1f3a; }
-.info-text-ko { font-size: 0.88rem; color: #bbb; margin-bottom: 3px; }
+.info-text-ko { font-size: 0.82rem; color: #bbb; margin-bottom: 3px; }
 .info-text-jp { font-size: 0.76rem; color: #555; }
 .info-pronunciation { font-size: 0.7rem; color: #7a6a2a; margin-top: 2px; }
 
@@ -264,6 +264,8 @@ function doTranslate() {
 
   var prompt = '이 이미지의 일본어 텍스트를 모두 찾아 분석하세요.\n' +
     '메뉴판이라면 카테고리별로 분류하고, 메뉴가 아닌 텍스트도 별도 카테고리로 묶어주세요.\n' +
+    '가격(円, ¥ 등)이 보이면 해당 메뉴의 price 필드에 반드시 포함하세요.\n' +
+    '+100円처럼 추가 요금도 price에 넣고, 가격 없으면 빈 문자열로 두세요.\n' +
     '각 텍스트의 이미지 내 위치도 퍼센트(%)로 추정해주세요.\n\n' +
     '반드시 아래 JSON만 출력하세요 (설명 없이):\n' +
     '{"summary":"이미지 전체 한줄 설명","categories":[{"name":"카테고리명","icon":"이모지","items":[' +
@@ -380,30 +382,47 @@ function renderResults() {
     allItems.forEach(function(item) {
       var px = (item.x / 100) * W;
       var py = (item.y / 100) * H;
-      var pw = Math.max((item.w / 100) * W, W * 0.15);
-      var ph = Math.max((item.h / 100) * H, H * 0.045);
-      var fontSize = Math.max(14, Math.min(Math.round(ph * 0.55), H * 0.05));
+      var phRaw = Math.max((item.h / 100) * H, H * 0.04);
+      var fontSize = Math.max(11, Math.min(Math.round(phRaw * 0.50), H * 0.042));
 
-      ctx.fillStyle = 'rgba(20, 20, 40, 0.82)';
+      ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
+      var koText = item.korean || '';
+      var priceText = item.price ? '  ' + item.price : '';
+
+      // 텍스트 너비로 박스 너비 계산 (최소 12%, 최대 68%)
+      var measuredW = ctx.measureText(koText + priceText).width;
+      var pw = Math.min(Math.max(measuredW + 18, W * 0.12), W * 0.68);
+      var ph = phRaw;
+
+      // 배경 박스
+      ctx.fillStyle = 'rgba(20, 20, 40, 0.85)';
       ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(px, py, pw, ph, 6);
+      if (ctx.roundRect) ctx.roundRect(px, py, pw, ph, 5);
       else ctx.rect(px, py, pw, ph);
       ctx.fill();
-
-      ctx.strokeStyle = 'rgba(231, 76, 60, 0.8)';
-      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(231, 76, 60, 0.75)';
+      ctx.lineWidth = 1.2;
       ctx.stroke();
 
+      // 가격 너비 예약
+      var priceDrawW = item.price ? ctx.measureText(item.price).width + 8 : 0;
+      var maxKoW = pw - priceDrawW - 10;
+
+      // 한국어 텍스트 (왼쪽)
       ctx.fillStyle = '#7effc0';
-      ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
       ctx.textBaseline = 'middle';
-      var maxW = pw - 8;
-      var koText = item.korean || '';
-      while (ctx.measureText(koText).width > maxW && koText.length > 2) {
-        koText = koText.slice(0, -1);
+      var dispKo = koText;
+      while (ctx.measureText(dispKo).width > maxKoW && dispKo.length > 2) {
+        dispKo = dispKo.slice(0, -1);
       }
-      if (koText !== (item.korean || '')) koText += '…';
-      ctx.fillText(koText, px + 4, py + ph / 2);
+      if (dispKo !== koText) dispKo += '…';
+      ctx.fillText(dispKo, px + 5, py + ph / 2);
+
+      // 가격 (오른쪽, 주황색)
+      if (item.price) {
+        ctx.fillStyle = '#f39c12';
+        ctx.fillText(item.price, px + pw - priceDrawW, py + ph / 2);
+      }
     });
   };
 
