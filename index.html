@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>飜訳 · 일본어 번역기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:     #1a1208;
+  --paper:   #faf7f0;
+  --warm:    #f5efe0;
+  --red:     #c0392b;
+  --red2:    #e74c3c;
+  --gold:    #b8860b;
+  --gold2:   #d4a017;
+  --muted:   #8a7d6b;
+  --border:  #ddd5c0;
+  --card:    #ffffff;
+  --shadow:  rgba(100,80,40,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--paper);
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(184,134,11,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(192,57,43,0.06) 0%, transparent 60%);
+  min-height: 100vh;
+  color: var(--ink);
+  padding-bottom: 60px;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--ink);
+  padding: 18px 24px 14px;
+  text-align: center;
+  position: -webkit-sticky; position: sticky;
+  top: 0; z-index: 200;
+  border-bottom: 3px solid var(--gold);
+}
+header .logo {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--paper);
+  letter-spacing: 0.08em;
+}
+header .logo span { color: var(--gold2); }
+header p {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 3px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ── TABS ── */
+.tabs {
+  display: -webkit-flex; display: flex;
+  background: var(--ink);
+  border-bottom: 1px solid var(--gold);
+  position: -webkit-sticky; position: sticky;
+  top: 62px; z-index: 100;
+}
+.tab-btn {
+  -webkit-flex: 1; flex: 1;
+  padding: 11px 4px;
+  background: transparent; border: none;
+  color: var(--muted);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.78rem; font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  letter-spacing: 0.04em;
+  -webkit-appearance: none;
+  transition: color 0.2s;
+}
+.tab-btn.active {
+  color: var(--gold2);
+  border-bottom-color: var(--gold2);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.section { padding: 20px 16px; max-width: 680px; margin: 0 auto; }
+
+/* ── API KEY BOX ── */
+.apikey-box {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 18px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 12px var(--shadow);
+}
+.apikey-box h3 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.85rem;
+  color: var(--gold);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+.apikey-row { display: -webkit-flex; display: flex; gap: 8px; -webkit-align-items: center; align-items: center; }
+.apikey-input {
+  -webkit-flex: 1; flex: 1;
+  padding: 10px 14px;
+  background: var(--warm);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  color: var(--ink);
+  font-size: 16px;
+  font-family: 'Courier New', monospace;
+  outline: none;
+  -webkit-appearance: none;
+  transition: border-color 0.2s;
+}
+.apikey-input:focus { border-color: var(--gold); }
+.apikey-input::placeholder { color: #bbb; font-size: 0.82rem; }
+.icon-btn {
+  background: var(--warm); border: 1.5px solid var(--border);
+  color: var(--muted); padding: 10px 13px;
+  border-radius: 10px; cursor: pointer;
+  font-size: 1rem; min-width: 44px; -webkit-appearance: none;
+}
+.save-btn {
+  background: var(--ink); color: var(--gold2);
+  border: none; padding: 10px 18px;
+  border-radius: 10px; cursor: pointer;
+  font-size: 0.85rem; font-weight: 700;
+  white-space: nowrap; -webkit-appearance: none;
+  letter-spacing: 0.04em;
+  transition: opacity 0.2s;
+}
+.save-btn:hover { opacity: 0.85; }
+.apikey-status { font-size: 0.75rem; margin-top: 8px; min-height: 16px; }
+.apikey-hint { font-size: 0.7rem; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+.apikey-hint a { color: var(--gold); text-decoration: none; }
+
+/* ── UPLOAD ── */
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 16px;
+  padding: 36px 20px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--card);
+  margin-bottom: 16px;
+  transition: border-color 0.2s, background 0.2s;
+  box-shadow: 0 2px 12px var(--shadow);
+}
+.upload-area:hover { border-color: var(--gold); background: var(--warm); }
+.upload-icon { font-size: 2.8rem; margin-bottom: 10px; }
+.upload-area p { font-size: 0.85rem; color: var(--muted); line-height: 1.8; }
+.upload-area strong { color: var(--red); font-weight: 600; }
+
+#fileInput { position: absolute; left: -9999px; opacity: 0; width: 1px; height: 1px; }
+
+.preview-wrap { display: none; margin-bottom: 16px; position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px var(--shadow); }
+.preview-wrap img { width: 100%; display: block; }
+.change-btn {
+  position: absolute; top: 10px; right: 10px;
+  background: rgba(26,18,8,0.7); border: none;
+  color: var(--paper); padding: 7px 14px;
+  border-radius: 8px; cursor: pointer;
+  font-size: 0.78rem; -webkit-appearance: none;
+  backdrop-filter: blur(4px);
+}
+
+.translate-btn {
+  width: 100%; padding: 16px;
+  background: var(--ink);
+  color: var(--gold2);
+  border: 2px solid var(--gold);
+  border-radius: 14px;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; font-weight: 700;
+  cursor: pointer; display: none;
+  margin-bottom: 14px;
+  letter-spacing: 0.1em;
+  -webkit-appearance: none;
+  transition: background 0.2s, color 0.2s;
+}
+.translate-btn:hover { background: var(--gold); color: var(--ink); }
+.translate-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.status-box {
+  border-radius: 12px; padding: 12px 16px;
+  font-size: 0.84rem; margin-bottom: 14px;
+  display: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+/* ── RESULT INNER TABS ── */
+.result-tabs { display: -webkit-flex; display: flex; gap: 8px; margin-bottom: 18px; }
+.r-tab-btn {
+  -webkit-flex: 1; flex: 1; padding: 11px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; -webkit-appearance: none;
+  transition: all 0.2s;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.r-tab-btn.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--warm);
+}
+
+/* ── OVERLAY ── */
+.overlay-section { display: none; }
+.canvas-wrap {
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 4px 24px var(--shadow);
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+}
+#overlayCanvas { width: 100%; height: auto; display: block; }
+.overlay-hint {
+  font-size: 0.72rem; color: var(--muted);
+  text-align: center; margin-bottom: 16px;
+  letter-spacing: 0.04em;
+}
+
+/* ── MENU CARDS ── */
+.text-section { display: none; }
+
+.summary-box {
+  background: var(--ink);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 18px;
+  border-left: 3px solid var(--gold);
+}
+.summary-box span { color: var(--gold2); font-family: 'Noto Serif KR', serif; }
+
+.result-header {
+  display: -webkit-flex; display: flex;
+  justify-content: space-between;
+  -webkit-align-items: center; align-items: center;
+  margin-bottom: 14px;
+}
+.result-header h3 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; color: var(--ink);
+  letter-spacing: 0.06em;
+}
+.dl-btn {
+  background: var(--ink); color: var(--gold2);
+  border: none; padding: 8px 16px;
+  border-radius: 8px; cursor: pointer;
+  font-size: 0.76rem; font-weight: 700;
+  -webkit-appearance: none; letter-spacing: 0.04em;
+}
+
+.menu-card {
+  background: var(--card);
+  border-radius: 16px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 14px var(--shadow);
+}
+.menu-card-header {
+  background: var(--ink);
+  padding: 12px 18px;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gold2);
+  letter-spacing: 0.08em;
+  border-bottom: 2px solid var(--gold);
+}
+.menu-row {
+  display: -webkit-flex; display: flex;
+  justify-content: space-between;
+  -webkit-align-items: flex-start; align-items: flex-start;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--warm);
+  gap: 12px;
+  transition: background 0.15s;
+}
+.menu-row:last-child { border-bottom: none; }
+.menu-row:hover { background: var(--warm); }
+.item-info { -webkit-flex: 1; flex: 1; min-width: 0; }
+.item-name {
+  font-size: 0.92rem; font-weight: 600;
+  color: var(--ink);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.item-sub {
+  font-size: 0.72rem; color: var(--muted);
+  margin-top: 3px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.item-right { text-align: right; white-space: nowrap; }
+.item-price {
+  font-size: 0.92rem; font-weight: 700;
+  color: var(--red);
+  font-family: 'Noto Serif KR', serif;
+}
+.item-note { font-size: 0.68rem; color: var(--gold); margin-top: 2px; }
+
+/* ── SPINNER ── */
+.spinner {
+  display: inline-block; width: 15px; height: 15px;
+  border: 2px solid rgba(212,160,23,0.3);
+  border-top-color: var(--gold2);
+  border-radius: 50%;
+  -webkit-animation: spin 0.8s linear infinite;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle; margin-right: 6px;
+}
+@-webkit-keyframes spin { to { -webkit-transform: rotate(360deg); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── DIVIDER ── */
+.divider {
+  text-align: center;
+  color: var(--border);
+  font-size: 1.2rem;
+  margin: 6px 0 2px;
+  letter-spacing: 0.3em;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🍜 <span>飜訳</span> · 일본어 번역기</div>
+  <p>Japanese Menu Translator · Travel Edition</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" id="uploadTabBtn" onclick="switchTab('upload',this)">📸 번역하기</button>
+  <button class="tab-btn" id="resultTabBtn" style="display:none;" onclick="switchTab('result',this)">✅ 결과보기</button>
+</div>
+
+<!-- TAB: 번역하기 -->
+<div id="tab-upload" class="tab-content active">
+  <div class="section">
+
+    <div class="apikey-box">
+      <h3>🔑 Claude API 키</h3>
+      <div class="apikey-row">
+        <input type="password" id="apikeyInput" class="apikey-input"
+          placeholder="sk-ant-api03-..."
+          spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">
+        <button class="icon-btn" onclick="toggleKeyVis()">👁</button>
+        <button class="save-btn" onclick="saveApiKey()">저장</button>
+      </div>
+      <div class="apikey-status" id="apikeyStatus"></div>
+      <div class="apikey-hint">
+        이 기기 브라우저에 저장 · 다음 방문 시 자동 불러옴<br>
+        발급 <a href="https://console.anthropic.com/keys" target="_blank">console.anthropic.com/keys</a>
+        &nbsp;·&nbsp; <a href="#" onclick="deleteApiKey();return false;" style="color:#c0392b;">키 삭제</a>
+      </div>
+    </div>
+
+    <label for="fileInput">
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-icon">📷</div>
+        <p><strong>사진 업로드</strong><br>메뉴판 · 간판 · 안내문<br>일본어가 포함된 이미지</p>
+      </div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*" capture="environment" onchange="handleFile(event)">
+
+    <div class="preview-wrap" id="previewWrap">
+      <img id="previewImg" alt="미리보기">
+      <button class="change-btn" onclick="document.getElementById('fileInput').click()">🔄 변경</button>
+    </div>
+
+    <button class="translate-btn" id="translateBtn" onclick="doTranslate()">
+      번역하기  ·  翻訳する
+    </button>
+    <div class="status-box" id="statusBox"></div>
+
+  </div>
+</div>
+
+<!-- TAB: 결과보기 -->
+<div id="tab-result" class="tab-content">
+  <div class="section">
+
+    <div class="result-tabs">
+      <button class="r-tab-btn active" id="rTabOverlay" onclick="switchResult('overlay',this)">🖼 이미지 오버레이</button>
+      <button class="r-tab-btn" id="rTabText" onclick="switchResult('text',this)">📋 텍스트 정리</button>
+    </div>
+
+    <!-- 오버레이 -->
+    <div class="overlay-section" id="overlaySection">
+      <div class="canvas-wrap">
+        <canvas id="overlayCanvas"></canvas>
+      </div>
+      <p class="overlay-hint">· 한국어 번역이 원본 위치에 표시됩니다 ·</p>
+    </div>
+
+    <!-- 메뉴카드 -->
+    <div class="text-section" id="textSection">
+      <div class="summary-box" id="summaryBox"></div>
+      <div class="result-header">
+        <h3>번역 정리</h3>
+        <button class="dl-btn" onclick="downloadResult()">💾 저장</button>
+      </div>
+      <div id="menuCardArea"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var savedApiKey   = '';
+var selectedFile  = null;
+var lastParsed    = null;
+var uploadedDataUrl = null;
+
+/* localStorage 자동 불러오기 */
+try {
+  var _stored = localStorage.getItem('japan_translator_key');
+  if (_stored) {
+    savedApiKey = _stored;
+    window.addEventListener('DOMContentLoaded', function() {
+      var inp = document.getElementById('apikeyInput');
+      var st  = document.getElementById('apikeyStatus');
+      if (inp) inp.value = _stored;
+      if (st)  { st.style.color='#27ae60'; st.textContent='✅ 저장된 키 자동 불러옴 · 바로 사용 가능!'; }
+    });
+  }
+} catch(e) {}
+
+/* ── localStorage에서 API 키 불러오기 ── */
+(function() {
+  try {
+    var stored = localStorage.getItem('anthropic_api_key');
+    if (stored) {
+      savedApiKey = stored;
+      document.addEventListener('DOMContentLoaded', function() {
+        var inp = document.getElementById('apikeyInput');
+        var st  = document.getElementById('apikeyStatus');
+        if (inp) inp.value = stored;
+        if (st)  { st.style.color = '#27ae60'; st.textContent = '✅ 저장된 키 불러옴 · 바로 사용 가능합니다.'; }
+      });
+    }
+  } catch(e) {}
+})();
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(function(el){ el.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(el){ el.classList.remove('active'); });
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function switchResult(name, btn) {
+  document.querySelectorAll('.r-tab-btn').forEach(function(el){ el.classList.remove('active'); });
+  btn.classList.add('active');
+  if (name === 'overlay') {
+    document.getElementById('overlaySection').style.display = 'block';
+    document.getElementById('textSection').style.display = 'none';
+  } else {
+    document.getElementById('overlaySection').style.display = 'none';
+    document.getElementById('textSection').style.display = 'block';
+  }
+}
+
+function toggleKeyVis() {
+  var inp = document.getElementById('apikeyInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function saveApiKey() {
+  var val = document.getElementById('apikeyInput').value.trim();
+  var st  = document.getElementById('apikeyStatus');
+  if (!val) { st.style.color='#c0392b'; st.textContent='❌ API 키를 입력해주세요.'; return; }
+  if (!val.startsWith('sk-ant-')) { st.style.color='#b8860b'; st.textContent='⚠️ sk-ant- 로 시작해야 합니다.'; return; }
+  savedApiKey = val;
+  try { localStorage.setItem('japan_translator_key', val); } catch(e) {}
+  st.style.color='#27ae60'; st.textContent='✅ 저장 완료 · 다음 방문 시 자동으로 불러옵니다.';
+}
+
+function deleteApiKey() {
+  try { localStorage.removeItem('japan_translator_key'); } catch(e) {}
+  savedApiKey = '';
+  document.getElementById('apikeyInput').value = '';
+  var st = document.getElementById('apikeyStatus');
+  st.style.color='#c0392b'; st.textContent='🗑 키가 삭제되었습니다.';
+}
+
+function handleFile(e) {
+  var file = e.target.files && e.target.files[0];
+  if (!file) return;
+  selectedFile = file;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    uploadedDataUrl = ev.target.result;
+    document.getElementById('previewImg').src = uploadedDataUrl;
+    document.getElementById('previewWrap').style.display = 'block';
+    document.getElementById('uploadArea').parentElement.style.display = 'none';
+    document.getElementById('translateBtn').style.display = 'block';
+    document.getElementById('statusBox').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function doTranslate() {
+  if (!savedApiKey) { alert('먼저 API 키를 입력하고 저장해주세요.'); return; }
+  if (!selectedFile) { alert('사진을 먼저 업로드해주세요.'); return; }
+
+  var btn    = document.getElementById('translateBtn');
+  var status = document.getElementById('statusBox');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>번역 중 · 잠시만요...';
+  status.style.display = 'block';
+  status.style.color   = '#8a7d6b';
+  status.textContent   = '🤖 AI가 이미지를 분석하고 있습니다...';
+
+  var b64       = uploadedDataUrl.split(',')[1];
+  var mediaType = selectedFile.type || 'image/jpeg';
+
+  var prompt =
+    '이 이미지에서 보이는 일본어 텍스트를 빠짐없이 모두 찾아 한국어로 번역하세요.\n' +
+    '작은 글씨, 주석, 안내문, 설명문, 헤더, 푸터 포함 이미지의 모든 일본어를 빠뜨리지 마세요.\n\n' +
+    '반드시 아래 JSON만 출력하세요 (설명 없이):\n' +
+    '{"summary":"이미지 한줄 설명","categories":[{"title":"카테고리명","icon":"이모지1개","items":[{"japanese":"원본 일본어","pronunciation":"일본어 발음을 한국어로 (예: 라멘, 미소시루)","korean":"자연스러운 한국어 번역","price":"가격(있으면) 또는 null","note":"시간제한·수량제한 등 비고(있으면) 또는 null","x":10,"y":5,"w":40,"h":5}]}]}\n\n' +
+    '규칙:\n' +
+    '1. 이미지에 보이는 일본어는 단 하나도 빠뜨리지 말 것\n' +
+    '2. 메뉴 항목뿐 아니라 설명문·안내문·주석도 모두 포함\n' +
+    '3. 비슷한 항목은 같은 카테고리로 묶을 것\n' +
+    '4. x,y,w,h 는 이미지 크기 대비 % 위치\n' +
+    '5. JSON 외 다른 텍스트 절대 출력 금지';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': savedApiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 3000,
+      messages: [{ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } },
+        { type: 'text', text: prompt }
+      ]}]
+    })
+  })
+  .then(function(res) {
+    if (!res.ok) return res.json().then(function(e){ throw new Error((e.error && e.error.message) || ('오류 ' + res.status)); });
+    return res.json();
+  })
+  .then(function(data) {
+    var text  = data.content.map(function(i){ return i.text || ''; }).join('');
+    var clean = text.replace(/```json|```/g, '').trim();
+    lastParsed = JSON.parse(clean);
+
+    document.getElementById('summaryBox').innerHTML = '📍 &nbsp;<span>' + esc(lastParsed.summary || '') + '</span>';
+    renderMenuCards();
+
+    status.style.display = 'none';
+    var resultBtn = document.getElementById('resultTabBtn');
+    resultBtn.style.display = 'block';
+    switchTab('result', resultBtn);
+    switchResult('overlay', document.getElementById('rTabOverlay'));
+    setTimeout(drawOverlay, 120);
+  })
+  .catch(function(err) {
+    status.style.color  = '#c0392b';
+    status.textContent  = '❌ ' + err.message;
+  })
+  .finally(function() {
+    btn.disabled  = false;
+    btn.innerHTML = '번역하기  ·  翻訳する';
+  });
+}
+
+function renderMenuCards() {
+  var area = document.getElementById('menuCardArea');
+  if (!lastParsed || !lastParsed.categories) { area.innerHTML = ''; return; }
+  var html = '';
+  lastParsed.categories.forEach(function(cat) {
+    html += '<div class="menu-card">';
+    html += '<div class="menu-card-header">' + esc(cat.icon || '📌') + '  ' + esc(cat.title || '기타') + '</div>';
+    (cat.items || []).forEach(function(item) {
+      var hasPrice = item.price && item.price !== 'null';
+      var hasNote  = item.note  && item.note  !== 'null';
+      html += '<div class="menu-row"><div class="item-info">';
+      html += '<div class="item-name">' + esc(item.korean || '') + '</div>';
+      html += '<div class="item-sub">';
+      html += esc(item.japanese || '');
+      if (item.pronunciation && item.pronunciation !== 'null') {
+        html += ' &nbsp;<span style="color:var(--gold);font-size:0.7rem;">(' + esc(item.pronunciation) + ')</span>';
+      }
+      html += '</div>';
+      if (hasNote) html += '<div class="item-sub" style="color:var(--gold)">' + esc(item.note) + '</div>';
+      html += '</div>';
+      if (hasPrice) html += '<div class="item-right"><div class="item-price">' + esc(item.price) + '</div></div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  area.innerHTML = html;
+}
+
+function drawOverlay() {
+  if (!lastParsed || !uploadedDataUrl) return;
+  var canvas = document.getElementById('overlayCanvas');
+  var ctx    = canvas.getContext('2d');
+  var img    = new Image();
+
+  img.onload = function() {
+    var W = img.naturalWidth;
+    var H = img.naturalHeight;
+    canvas.width  = W;
+    canvas.height = H;
+    ctx.drawImage(img, 0, 0, W, H);
+
+    var allItems = [];
+    (lastParsed.categories || []).forEach(function(cat) {
+      (cat.items || []).forEach(function(item) { allItems.push(item); });
+    });
+
+    allItems.forEach(function(item) {
+      if (item.x == null || item.y == null) return;
+      var x  = (item.x / 100) * W;
+      var y  = (item.y / 100) * H;
+      var bw = Math.max((item.w / 100) * W, W * 0.08);
+      var bh = Math.max((item.h / 100) * H, H * 0.028);
+      var fs = Math.max(13, Math.min(Math.round(bh * 0.6), H * 0.044));
+
+      /* 배경: 따뜻한 아이보리 */
+      ctx.fillStyle = 'rgba(250,247,240,0.92)';
+      ctx.fillRect(x, y, bw, bh);
+      /* 테두리: 골드 */
+      ctx.strokeStyle = 'rgba(184,134,11,0.9)';
+      ctx.lineWidth   = Math.max(1.5, W / 450);
+      ctx.strokeRect(x, y, bw, bh);
+
+      ctx.font          = 'bold ' + fs + 'px sans-serif';
+      ctx.textBaseline  = 'middle';
+      var pad = fs * 0.45;
+
+      /* 가격 (빨간색, 우측) */
+      if (item.price && item.price !== 'null') {
+        ctx.fillStyle = '#c0392b';
+        var priceW = ctx.measureText(item.price).width;
+        ctx.fillText(item.price, x + bw - priceW - pad, y + bh / 2);
+        /* 번역 텍스트 (진한 잉크, 좌측) */
+        ctx.fillStyle = '#1a1208';
+        var label  = item.korean || '';
+        var maxTw  = bw - priceW - pad * 3;
+        while (label.length > 1 && ctx.measureText(label).width > maxTw) label = label.slice(0,-1);
+        if (label !== item.korean) label += '…';
+        ctx.fillText(label, x + pad, y + bh / 2);
+      } else {
+        ctx.fillStyle = '#1a1208';
+        var label  = item.korean || '';
+        var maxTw  = bw - pad * 2;
+        while (label.length > 1 && ctx.measureText(label).width > maxTw) label = label.slice(0,-1);
+        if (label !== item.korean) label += '…';
+        ctx.fillText(label, x + pad, y + bh / 2);
+      }
+    });
+  };
+  img.src = uploadedDataUrl;
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function downloadResult() {
+  if (!lastParsed) return;
+  var lines = [lastParsed.summary || '', ''];
+  (lastParsed.categories || []).forEach(function(cat) {
+    lines.push('== ' + (cat.icon || '') + ' ' + (cat.title || '') + ' ==');
+    (cat.items || []).forEach(function(item) {
+      var line = (item.korean || '') + '  /  ' + (item.japanese || '');
+      if (item.price && item.price !== 'null') line += '  —  ' + item.price;
+      if (item.note  && item.note  !== 'null') line += '  (' + item.note + ')';
+      lines.push(line);
+    });
+    lines.push('');
+  });
+  var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+  var a    = document.createElement('a');
+  a.href   = URL.createObjectURL(blob);
+  a.download = '번역결과.txt';
+  a.click();
+}
+</script>
+</body>
+</html>
